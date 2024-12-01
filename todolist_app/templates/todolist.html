@@ -1,0 +1,131 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1CmrxMRARb6aLqgBO7yyAxTOQE2AKb9GfXnE2qZ9/5zDq6zQQvIGIm1pF5vBm5ni" crossorigin="anonymous">
+
+    <title>Todo List Manager - FirstTime</title>
+    <!-- Navbar with bg-dark and navbar-dark classes for styling -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+          <a class="navbar-brand" href="#"><img src="{% static "lightning.jpg" %}}"    FirstTime</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="nav-link"href="{% url 'index' %}">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link"href="{% url 'todolist' %}">Todo list</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'about' %}">About Us</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'contact'%}">Contact Us</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        {% if user.is_authenticated %}
+        <div class="d-flex" role="search">
+          <p>{{ user.username }}</p>
+          <a href="{% url 'logout'%}">
+            <button class="btn btn-outline-success" type="submit">LogOut</button>
+          </a>
+        </div>
+        {% else %}
+        <a href="{% url 'login'%}">
+          <button class="btn btn-outline-success" type="submit">Login</button>
+        </a>
+      </br>
+        <a href="{% url 'register'%}">
+          <button class="btn btn-outline-success" type="submit">register</button>
+        </a>
+        {% endif %}
+    </nav>
+</head>
+  <body>
+
+    <div class="container mt-5">
+</br>
+
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-success" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+
+    <form method="POST" class="row">
+      {% csrf_token %}
+      <label class="clo-lg-4">Your Task for Today?</lable>
+      <input type="text" class="form-control col-lg-6" name="task" placeholder='New Task?'>
+      <button type="submit" class="btn btn-primary col-lg-2">Add Task</button>
+    </form>
+
+</br>
+
+      <table class="table-bordered text-center">
+        <thead class="thread-dark">
+          <tr>
+            <th scope="col">Task</th>
+            <th scope="col">Done</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+        {%if all_tasks %}
+          {% for obj  in all_tasks %}
+            {% if obj.done %}
+              <tr class="table-success">
+                <td>{{ obj.task }}</td>
+                <td><a href="{% url 'pending_task' obj.id %}"><button type="button" class="btn btn-secondary">Pending</button></a></td>
+                <td><a href="{% url 'edit_task' obj.id %}"><button type="button" class="btn btn-warning">Edit</button></a></td>
+                <td><a href="{% url 'delete_task' obj.id %}"><button type="button" class="btn btn-danger">Delete</button></a></td>
+              </tr>
+            {% else %}
+              <tr>
+                <td>{{ obj.task }}</td>
+                <td><a href="{% url 'complete_task' obj.id %}"><button type="button" class="btn btn-success">Complete</button></a></td>
+                <td><a href="{% url 'edit_task' obj.id %}"><button type="button" class="btn btn-warning">Edit</button></a></td>
+                <td><a href="{% url 'delete_task' obj.id %}"><button type="button" class="btn btn-danger">Delete</button></a></td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+        </tbody>
+      </table>
+
+      <nav aria-label="Page navigation example">
+        <ul class="pagination">
+          <li class="page-item"><a class="page-link" href="?pg=1">Previous</a></li>
+          {% if all_tasks.has_previous %}
+          <li class="page-item"><a class="page-link" href="?pg={{ all_tasks.previous_page_number }}">{{ all_tasks.previous_page_number }}</a></li>
+          {% endif %}
+          <li class="page-item"><a class="page-link" href="?pg={{ all_tasks.number }}">{{ all_tasks.number }}</a></li>
+          {% if all_tasks.has_next %}
+          <li class="page-item"><a class="page-link" href="?pg={{ all_tasks.next_page_number }}">{{ all_tasks.next_page_number }}</a></li>
+          {% endif %}
+          <li class="page-item"><a class="page-link" href="?pg={{ all_tasks.paginator.num_pages }}">Next</a></li>
+        </ul>
+      </nav>
+
+</br>
+    
+    </div>
+
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+0I5F8/DoB9x3cRnVhHO7LEB6L4O3" crossorigin="anonymous"></script>
+  </body>
+</html>
