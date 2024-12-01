@@ -1,0 +1,54 @@
+# Virtual environment
+venv/
+env/
+
+# Python bytecode files
+*.pyc
+*.pyo
+__pycache__/
+
+# Django specific
+db.sqlite3
+*.log
+media/
+staticfiles/
+static/
+
+# Environment variables
+.env
+.env.*
+
+# VSCode specific
+.vscode/
+
+# PyCharm specific
+.idea/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# macOS specific
+.DS_Store
+
+# Windows specific
+Thumbs.db
+desktop.ini
+
+# Backup files
+*.bak
+*.swp
+*.tmp
+*.orig
+
+# Node modules (if you use Node.js for front-end assets)
+node_modules/
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+.cache
+
+# Migrations (optional, if you recreate them often)
+**/migrations/*.py
+!**/migrations/__init__.py
